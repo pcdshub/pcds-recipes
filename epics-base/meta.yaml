@@ -1,4 +1,3 @@
-
 package:
     name: epics-base
     version: "3.14.12.6"
@@ -10,10 +9,9 @@ source:
         - config_site.diff [not win]
         - config_common.diff [not win]
         - config_readline.diff [linux]
-        - bind-returns-eacces.patch
 
 build:
-  number: 2
+  number: 1
 
 requirements:
   build:
