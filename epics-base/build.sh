@@ -13,11 +13,11 @@ cp -av $PREFIX/epics/lib/$EPICS_HOST_ARCH/lib*so* $PREFIX/lib 2>/dev/null || : #
 cp -av $PREFIX/epics/lib/$EPICS_HOST_ARCH/lib*dylib* $PREFIX/lib 2>/dev/null || :  # osx
 
 # Setup symlinks for utilities
-# BINS="caget caput camonitor softIoc"
-# cd $PREFIX/bin
-# for file in $BINS ; do
-# 	ln -s ../epics/bin/$EPICS_HOST_ARCH/$file .
-# done
+BINS="caget caput camonitor cainfo softIoc caRepeater"
+cd $PREFIX/bin
+for file in $BINS ; do
+	ln -s ../epics/bin/$EPICS_HOST_ARCH/$file .
+done
 
 # deal with env export
 mkdir -p $PREFIX/etc/conda/activate.d
@@ -34,6 +34,10 @@ echo "export EPICS_HOST_ARCH="$EPICS_HOST_ARCH >> $ACTIVATE
 # tear down
 echo "unset EPICS_BASE" >> $DEACTIVATE
 echo "unset EPICS_HOST_ARCH" >> $DEACTIVATE
+
+# make sure activate and deactivate scripts have exec permissions
+chmod a+x $ACTIVATE
+chmod a+x $DEACTIVATE
 
 # clean up after self
 unset ACTIVATE
