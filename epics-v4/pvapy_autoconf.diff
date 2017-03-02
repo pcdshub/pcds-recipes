@@ -1,5 +1,5 @@
---- EPICS-CPP-4.6.0/pvaPy/tools/autoconf/configure.ac2016-09-18 10:22:36.000000000 -0700
-+++ EPICS-CPP-4.6.0/pvaPy/tools/autoconf/configure.ac2017-01-20 11:55:59.516010999 -0800
+--- EPICS-CPP-4.6.0/pvaPy/tools/autoconf/configure.ac	2016-09-18 10:22:36.000000000 -0700
++++ EPICS-CPP-4.6.0/pvaPy/tools/autoconf/configure.ac	2017-03-02 11:14:22.656492100 -0800
 @@ -2,7 +2,7 @@
  AM_INIT_AUTOMAKE([-Wall -Werror foreign])
  AC_CONFIG_FILES([Makefile])
