@@ -1,0 +1,31 @@
+package:
+  name: epicsv4
+  version: "4.6.0"
+
+source:
+  fn: EPICS-CPP-4.6.0.tar.gz
+  url: sourceforge.net/projects/epics-pvdata/files/4.6.0/EPICS-CPP-4.6.0.tar.gz
+  patches:
+    - pvapy_autoconf.diff
+    - pvapy_makefile.diff
+
+build:
+  number: 1
+  script_env:
+    - EPICS_BASE
+    - EPICS_HOST_ARCH
+
+requirements:
+  build:
+    - epics-base
+    - automake
+    - autoconf
+    - boost
+
+  run:
+    - epics-base
+
+about:
+  home: http://www.aps.anl.gov/epics
+  license: Epics Open License
+  summary: EPICS V4 Library

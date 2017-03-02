@@ -1,0 +1,11 @@
+--- EPICS-CPP-4.6.0/pvaPy/Makefile2016-09-18 10:22:36.000000000 -0700
++++ EPICS-CPP-4.6.0/pvaPy/Makefile2017-01-23 22:38:01.612010004 -0800
+@@ -44,7 +44,7 @@
+ 
+   configure: $(AC_DIR)/configure
+ 	@$(RM) $(RELEASE_LOCAL) $(CONFIG_SITE_LOCAL)
+-	$(AC_DIR)/configure --with-top=$(TOP)
++	$(AC_DIR)/configure --with-top=$(TOP) --with-boost=$(EPICS_BASE)/..
+ 
+   $(AC_DIR)/configure: $(AC_DIR)/configure.ac $(wildcard $(AC_DIR)/m4/*.m4)
+ 	autoreconf --install $(AC_DIR)

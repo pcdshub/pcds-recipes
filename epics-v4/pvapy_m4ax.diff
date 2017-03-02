@@ -1,0 +1,10 @@
+--- EPICS-CPP-4.6.0/pvaPy/tools/autoconf/m4/ax_pva_py.m42016-09-18 10:22:36.000000000 -0700
++++ EPICS-CPP-4.6.0/pvaPy/tools/autoconf/m4/ax_pva_py.m42017-01-23 23:43:56.800014070 -0800
+@@ -148,6 +148,6 @@
+     echo "PVA_API_VERSION = $PVA_API_VERSION" >> $config_site_local
+     echo "PVA_RPC_API_VERSION = $PVA_RPC_API_VERSION" >> $config_site_local
+     echo "HAVE_BOOST_NUM_PY = $HAVE_BOOST_NUM_PY" >> $config_site_local
+-    echo "PYTHON_VERSION := \$(shell python -c 'import sys; print sys.version[[:3]]')" >> $config_site_local
++    echo "PYTHON_VERSION := \$(shell python -c 'import sys; print(sys.version[[:3]])')" >> $config_site_local
+     AC_MSG_NOTICE([created $config_site_local file])
+ ])
