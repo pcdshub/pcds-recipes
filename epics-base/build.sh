@@ -25,7 +25,6 @@ mkdir -p $PREFIX/etc/conda/deactivate.d
 
 ACTIVATE=$PREFIX/etc/conda/activate.d/epics_base.sh
 DEACTIVATE=$PREFIX/etc/conda/deactivate.d/epics_base.sh
-ETC=$PREFIX/etc
 
 # set up
 echo "export EPICS_BASE="$EPICS_BASE >> $ACTIVATE
@@ -42,4 +41,3 @@ chmod a+x $DEACTIVATE
 # clean up after self
 unset ACTIVATE
 unset DEACTIVATE
-unset ETC
