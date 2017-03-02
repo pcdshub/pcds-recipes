@@ -3,8 +3,9 @@ package:
   version: "4.6.0"
 
 source:
+  path: ./temp_source/EPICS-CPP-4.6.0.tar.gz
   fn: EPICS-CPP-4.6.0.tar.gz
-  url: sourceforge.net/projects/epics-pvdata/files/4.6.0/EPICS-CPP-4.6.0.tar.gz
+  # url: https://sourceforge.net/projects/epics-pvdata/files/4.6.0/EPICS-CPP-4.6.0.tar.gz
   patches:
     - pvapy_autoconf.diff
     - pvapy_makefile.diff
@@ -28,5 +29,5 @@ requirements:
 
 about:
   home: epics-pvdata.sourceforge.net
-  license: Epics Open License
+  license: EPICS Open License
   summary: EPICS V4 Library
