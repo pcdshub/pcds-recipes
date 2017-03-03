@@ -13,11 +13,21 @@ echo "NORMATIVETYPES = $EPICS4_DIR/normativeTypesCPP" >> $RELEASE
 echo "PVDATA = $EPICS4_DIR/pvDataCPP" >> $RELEASE
 echo "EPICS_BASE = $EPICS_BASE" >> $RELEASE
 SITE="configure/CONFIG_SITE.local"
-echo "PVA_PY_CPPFLAGS = -I$PREFIX/include -I$PREFIX/include/python$PY_VERm" >> $SITE
-echo "PVA_PY_LDFLAGS = -L/usr/lib64 -L$PREFIX/lib -lpython$PY_VER" >> $SITE
+PYINC="python$PY_VER"
+if [ $PY3K ]; then
+  USE_M="m"
+else
+  USE_M=""
+fi
+## Location of numpy.hpp is either wrong or it changed at some point
+#if [ -f "$PREFIX/include/boost/python/numpy.hpp" ]; then
+#  ln -s "$PREFIX/include/boost/python/numpy.hpp" "$PREFIX/include/boost/numpy.hpp"
+#fi
+echo "PVA_PY_CPPFLAGS = -I$PREFIX/include -I$PREFIX/include/$PYINC$USE_M" >> $SITE
+echo "PVA_PY_LDFLAGS = -L/usr/lib64 -L$PREFIX/lib -l$PYINC$USE_M" >> $SITE
 echo "PVA_PY_SYS_LIBS = boost_python" >> $SITE
 echo "PVA_API_VERSION = 450" >> $SITE
-echo "PVA_RPC_API_VERSION = 440" >> $SITE
+echo "PVA_RPC_API_VERSION = 450" >> $SITE
 echo "HAVE_BOOST_NUM_PY = 1" >> $SITE
 make
 
