@@ -6,10 +6,7 @@ source:
   path: ./temp_source/EPICS-CPP-4.6.0.tar.gz
   fn: EPICS-CPP-4.6.0.tar.gz
   # url: https://sourceforge.net/projects/epics-pvdata/files/4.6.0/EPICS-CPP-4.6.0.tar.gz
-  patches:
-    - pvapy_autoconf.diff
-    - pvapy_makefile.diff
-    - pvapy_m4ax.diff
+  # patches:
 
 build:
   number: 1
@@ -22,7 +19,9 @@ requirements:
     - epics-base
     - automake
     - autoconf
-    - boost
+    - python
+    - numpy
+    - boost >=1.63
 
   run:
     - epics-base

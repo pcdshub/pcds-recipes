@@ -1,26 +1,36 @@
 #!/bin/bash
 install -d $PREFIX/bin
 install -d $PREFIX/lib
-install -d $PREFIX/epicsv4
+install -d $PREFIX/epics-v4
 
-make configure
-make -j$(getconf _NPROCESSORS_ONLN) pvCommonCPP pvDataCPP pvAccessCPP normativeTypesCPP
+make -j$(getconf _NPROCESSORS_ONLN)
 export EPICS4_DIR=`pwd`
-export BOOST_PYTHON_DIR=$PREFIX/lib
 cd pvaPy
-make configure
+RELEASE="configure/RELEASE.local"
+echo "PVACLIENT = $EPICS4_DIR/pvaClientCPP" >> $RELEASE
+echo "PVACCESS = $EPICS4_DIR/pvAccessCPP" >> $RELEASE
+echo "NORMATIVETYPES = $EPICS4_DIR/normativeTypesCPP" >> $RELEASE
+echo "PVDATA = $EPICS4_DIR/pvDataCPP" >> $RELEASE
+echo "EPICS_BASE = $EPICS_BASE" >> $RELEASE
+SITE="configure/CONFIG_SITE.local"
+echo "PVA_PY_CPPFLAGS = -I$PREFIX/include -I$PREFIX/include/python$PY_VERm" >> $SITE
+echo "PVA_PY_LDFLAGS = -L/usr/lib64 -L$PREFIX/lib -lpython$PY_VER" >> $SITE
+echo "PVA_PY_SYS_LIBS = boost_python" >> $SITE
+echo "PVA_API_VERSION = 450" >> $SITE
+echo "PVA_RPC_API_VERSION = 440" >> $SITE
+echo "HAVE_BOOST_NUM_PY = 1" >> $SITE
 make
 
 # Copy libraries into $PREFIX/lib
-PKGS="pvCommonCPP pvDataCPP pvAccessCPP normativeTypesCPP"
+PKGS="pvCommonCPP pvDataCPP pvAccessCPP normativeTypesCPP pvaClientCPP pvDatabaseCPP pvaPy pvaSrv"
 for pkg in $PKGS ; do
-  cp -av $PREFIX/epicsv4/$pkg/lib/$EPICS_HOST_ARCH/lib*so* $PREFIX/lib 2>/dev/null || : # linux
-  cp -av $PREFIX/epicsv4/$pkg/lib/$EPICS_HOST_ARCH/lib*dylib* $PREFIX/lib 2>/dev/null || :  # osx
+  cp -av $PREFIX/epics-v4/$pkg/lib/$EPICS_HOST_ARCH/lib*so* $PREFIX/lib 2>/dev/null || : # linux
+  cp -av $PREFIX/epics-v4/$pkg/lib/$EPICS_HOST_ARCH/lib*dylib* $PREFIX/lib 2>/dev/null || :  # osx
 done
 
 # Setup symlinks for utilities
 BINS="eget pvget pvinfo pvlist pvput"
 cd $PREFIX/bin
 for file in $BINS ; do
-  ln -s ../epicsv4/bin/$EPICS_HOST_ARCH/$file .
+  ln -s ../epics-v4/bin/$EPICS_HOST_ARCH/$file .
 done
