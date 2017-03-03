@@ -6,13 +6,13 @@ source:
   path: ./temp_source/EPICS-CPP-4.6.0.tar.gz
   fn: EPICS-CPP-4.6.0.tar.gz
   # url: https://sourceforge.net/projects/epics-pvdata/files/4.6.0/EPICS-CPP-4.6.0.tar.gz
-  # patches:
+  patches:
+    - pvobjectcpp.diff
+    - pypvdatautilitycpp.diff
+    - pypvdatautilityh.diff
 
 build:
   number: 1
-  script_env:
-    - EPICS_BASE
-    - EPICS_HOST_ARCH
 
 requirements:
   build:
