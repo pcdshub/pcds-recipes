@@ -6,10 +6,11 @@ install -d $PREFIX/epics-v4
 make -j$(getconf _NPROCESSORS_ONLN)
 
 # Drop everything into the epics-v4 folder
-mkdir epics-v4
-shopt -s extglob
-mv !(epics-v4) epics-v4
-shopt -u extglob
+cp -R * $PREFIX/epics-v4
+# mkdir epics-v4
+# shopt -s extglob
+# mv !(epics-v4) epics-v4
+# shopt -u extglob
 
 # Copy libraries into $PREFIX/lib
 PKGS="pvCommonCPP pvDataCPP pvAccessCPP normativeTypesCPP pvaClientCPP pvDatabaseCPP pvaSrv"
@@ -20,7 +21,6 @@ done
 
 # Setup symlinks for utilities
 BINS="eget pvget pvinfo pvlist pvput"
-cd $PREFIX/bin
 for file in $BINS ; do
-  ln -s ../epics-v4/pvAccessCPP/bin/$EPICS_HOST_ARCH/$file .
+  ln -s $PREFIX/epics-v4/pvAccessCPP/bin/$EPICS_HOST_ARCH/$file $PREFIX/bin
 done
