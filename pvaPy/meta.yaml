@@ -1,18 +1,27 @@
 package:
-  name: epics-v4
+  name: pvaPy
   version: "4.6.0"
 
 source:
-  path: ./temp_source/EPICS-CPP-4.6.0.tar.gz
+  path: ../epics-v4/temp_source/EPICS-CPP-4.6.0.tar.gz
   fn: EPICS-CPP-4.6.0.tar.gz
   # url: https://sourceforge.net/projects/epics-pvdata/files/4.6.0/EPICS-CPP-4.6.0.tar.gz
+  patches:
+    - pvobjectcpp.diff
+    - pypvdatautilitycpp.diff
+    - pypvdatautilityh.diff
 
 build:
   number: 1
 
 requirements:
   build:
-    - epics-base
+    - epics-v4
+    - automake
+    - autoconf
+    - python
+    - numpy
+    - boost >=1.63
 
   run:
     - epics-base
