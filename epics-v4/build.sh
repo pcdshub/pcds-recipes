@@ -7,10 +7,6 @@ make -j$(getconf _NPROCESSORS_ONLN)
 
 # Drop everything into the epics-v4 folder
 cp -R * $PREFIX/epics-v4
-# mkdir epics-v4
-# shopt -s extglob
-# mv !(epics-v4) epics-v4
-# shopt -u extglob
 
 # Copy libraries into $PREFIX/lib
 PKGS="pvCommonCPP pvDataCPP pvAccessCPP normativeTypesCPP pvaClientCPP pvDatabaseCPP pvaSrv"
@@ -24,3 +20,24 @@ BINS="eget pvget pvinfo pvlist pvput"
 for file in $BINS ; do
   ln -s $PREFIX/epics-v4/pvAccessCPP/bin/$EPICS_HOST_ARCH/$file $PREFIX/bin
 done
+
+# deal with env export
+mkdir -p $PREFIX/etc/conda/activate.d
+mkdir -p $PREFIX/etc/conda/deactivate.d
+
+ACTIVATE=$PREFIX/etc/conda/activate.d/epics_v4.sh
+DEACTIVATE=$PREFIX/etc/conda/deactivate.d/epics_v4.sh
+
+# set up
+echo "export EPICS4_BASE=$PREFIX/epics-v4" >> $ACTIVATE
+
+# tear down
+echo "unset EPICS4_BASE" >> $DEACTIVATE
+
+# make sure activate and deactivate scripts have exec permissions
+chmod a+x $ACTIVATE
+chmod a+x $DEACTIVATE
+
+# clean up after self
+unset ACTIVATE
+unset DEACTIVATE
