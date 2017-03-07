@@ -1,6 +1,6 @@
 #!/bin/bash
 cd pvaPy
-export EPICS4_DIR=$PREFIX/epics-v4
+export EPICS4_DIR=$EPICS4_BASE
 
 RELEASE="configure/RELEASE.local"
 echo "PVACLIENT = $EPICS4_DIR/pvaClientCPP" >> $RELEASE
@@ -24,7 +24,11 @@ echo "PVA_RPC_API_VERSION = 450" >> $SITE
 echo "HAVE_BOOST_NUM_PY = 1" >> $SITE
 make
 
-# TODO: get python libraries into site-packages
+# Drop compiled .so file into site-packages
+cp lib/python$PY_VER/pvaccess.so $(PREFIX)/lib/python$PY_VER/site-packages
+
+# force build script to fail so it doesn't end up in build directory
+break everything!
 
 # # Copy libraries into $PREFIX/lib
 # PKGS="pvCommonCPP pvDataCPP pvAccessCPP normativeTypesCPP pvaClientCPP pvDatabaseCPP pvaPy pvaSrv"

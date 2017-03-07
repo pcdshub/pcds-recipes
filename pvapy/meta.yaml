@@ -1,10 +1,12 @@
 package:
-  name: pvaPy
+  name: pvapy
   version: "4.6.0"
 
 source:
-  path: ../epics-v4/temp_source/EPICS-CPP-4.6.0.tar.gz
-  fn: EPICS-CPP-4.6.0.tar.gz
+  # path: ../epics-v4/temp_source/EPICS-CPP-4.6.0.tar.gz
+  # path: {{ environ.get('PREFIX') }}/epics-v4/pvaPy
+  path: {{ EPICS4_BASE }}/pvaPy
+  # fn: EPICS-CPP-4.6.0.tar.gz
   # url: https://sourceforge.net/projects/epics-pvdata/files/4.6.0/EPICS-CPP-4.6.0.tar.gz
   patches:
     - pvobjectcpp.diff
@@ -13,18 +15,25 @@ source:
 
 build:
   number: 1
+  string: np{{ np }}py{{ py }}
 
 requirements:
   build:
-    - epics-v4
-    - automake
-    - autoconf
+    - epics-v4 4.6.0
+      #    - automake
+      #    - autoconf
     - python
     - numpy
     - boost >=1.63
 
   run:
-    - epics-base
+    - epics-v4 4.6.0
+    - python
+    - numpy
+
+test:
+  import:
+    - pvaccess
 
 about:
   home: epics-pvdata.sourceforge.net
