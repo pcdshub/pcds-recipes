@@ -3,9 +3,9 @@ package:
   version: "4.6.0"
 
 source:
-  # path: ../epics-v4/temp_source/EPICS-CPP-4.6.0.tar.gz
+  path: ../temp_source/EPICS-CPP-4.6.0.tar.gz
   # path: {{ environ.get('PREFIX') }}/epics-v4/pvaPy
-  path: {{ EPICS4_BASE }}/pvaPy
+  # path: {{ EPICS4_BASE }}/pvaPy
   # fn: EPICS-CPP-4.6.0.tar.gz
   # url: https://sourceforge.net/projects/epics-pvdata/files/4.6.0/EPICS-CPP-4.6.0.tar.gz
   patches:
