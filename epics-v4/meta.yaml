@@ -3,7 +3,7 @@ package:
   version: "4.6.0"
 
 source:
-  path: ./temp_source/EPICS-CPP-4.6.0.tar.gz
+  path: ../temp_source/EPICS-CPP-4.6.0.tar.gz
   fn: EPICS-CPP-4.6.0.tar.gz
   # url: https://sourceforge.net/projects/epics-pvdata/files/4.6.0/EPICS-CPP-4.6.0.tar.gz
 
