@@ -13,17 +13,12 @@ echo "PVDATA = $EPICS4_DIR/pvDataCPP" >> $RELEASE
 echo "EPICS_BASE = $EPICS_BASE" >> $RELEASE
 
 SITE="configure/CONFIG_SITE.local"
-PYINC="python$PY_VER"
-if [ $PY3K ]; then
-  USE_M="m"
+PYINC=`python -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())"`
+echo "PVA_PY_CPPFLAGS = -I$PREFIX/include -I$PYINC" >> $SITE
+if [ $PY3K == "1" ]; then
+  echo "PVA_PY_LDFLAGS = -L/usr/lib64 -L$PREFIX/lib -lboost_python3 -lboost_numpy -l$(basename $PYINC)" >> $SITE
 else
-  USE_M=""
-fi
-echo "PVA_PY_CPPFLAGS = -I$PREFIX/include -I$PREFIX/include/$PYINC$USE_M" >> $SITE
-if [ $PY3K ]; then
-  echo "PVA_PY_LDFLAGS = -L/usr/lib64 -L$PREFIX/lib -lboost_python3 -lboost_numpy -l$PYINC$USE_M" >> $SITE
-else
-  echo "PVA_PY_LDFLAGS = -L/usr/lib64 -L$PREFIX/lib -lboost_python -lboost_numpy -l$PYINC$USE_M" >> $SITE
+  echo "PVA_PY_LDFLAGS = -L/usr/lib64 -L$PREFIX/lib -lboost_python -lboost_numpy -l$(basename $PYINC)" >> $SITE
 fi
 echo "PVA_API_VERSION = 450" >> $SITE
 echo "PVA_RPC_API_VERSION = 450" >> $SITE
