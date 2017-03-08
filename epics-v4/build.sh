@@ -3,10 +3,12 @@ install -d $PREFIX/bin
 install -d $PREFIX/lib
 install -d $PREFIX/epics-v4
 
-make -j$(getconf _NPROCESSORS_ONLN)
-
-# Drop everything into the epics-v4 folder
+# Drop everything into the epics-v4 folder because I don't want to install 10 different directories
 cp -R * $PREFIX/epics-v4
+
+# Make in prefix dir so hard-coded paths are fixed correctly
+cd $PREFIX/epics-v4
+make -j$(getconf _NPROCESSORS_ONLN)
 
 # Copy libraries into $PREFIX/lib
 PKGS="pvCommonCPP pvDataCPP pvAccessCPP normativeTypesCPP pvaClientCPP pvDatabaseCPP pvaSrv"
