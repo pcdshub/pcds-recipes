@@ -24,6 +24,7 @@ for file in $BINS ; do
 done
 
 # deal with env export
+# this isn't standard like EPICS_BASE is, but it's useful for building pvaPy
 mkdir -p $PREFIX/etc/conda/activate.d
 mkdir -p $PREFIX/etc/conda/deactivate.d
 

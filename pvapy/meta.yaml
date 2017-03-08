@@ -1,14 +1,19 @@
+# Note that I'm ignoring pvaPy's real versioning, instead opting to pick the
+# version number associated with a particular EPICS-CPP release.
+# This is a separate build because epics-v4 takes a while to compile and pvaPy
+# should be be linked to a numpy release at build.
 package:
   name: pvapy
   version: "4.6.0"
 
 source:
-  path: ../temp_source/EPICS-CPP-4.6.0.tar.gz
-  # path: {{ environ.get('PREFIX') }}/epics-v4/pvaPy
-  # path: {{ EPICS4_BASE }}/pvaPy
+  # Full source to make sure we get the associated release of pvaPy
+  # Conda caches these files so you don't have to redownload to build both
+  url: https://sourceforge.net/projects/epics-pvdata/files/4.6.0/EPICS-CPP-4.6.0.tar.gz
   fn: EPICS-CPP-4.6.0.tar.gz
-  # url: https://sourceforge.net/projects/epics-pvdata/files/4.6.0/EPICS-CPP-4.6.0.tar.gz
   patches:
+    # Switch to syntax from boost 1.63 because you can get boost with numpy
+    # from conda-forge starting at this release.
     - pvobjectcpp.diff
     - pypvdatautilitycpp.diff
     - pypvdatautilityh.diff
@@ -20,8 +25,6 @@ build:
 requirements:
   build:
     - epics-v4 4.6.0
-      #    - automake
-      #    - autoconf
     - python
     - numpy
     - boost >=1.63
@@ -38,4 +41,4 @@ test:
 about:
   home: epics-pvdata.sourceforge.net
   license: EPICS Open License
-  summary: EPICS V4 Library
+  summary: EPICS V4 Python Bindings

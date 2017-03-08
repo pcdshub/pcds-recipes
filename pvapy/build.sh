@@ -1,7 +1,10 @@
 #!/bin/bash
+# Ignore the rest of the EPICS-CPP source and use installed v4
 cd pvaPy
 export EPICS4_DIR=$EPICS4_BASE
 
+# Manual config because autoconf is broken for python 3
+# I can be reasonably sure of the config here because of how conda works
 RELEASE="configure/RELEASE.local"
 echo "PVACLIENT = $EPICS4_DIR/pvaClientCPP" >> $RELEASE
 echo "PVACCESS = $EPICS4_DIR/pvAccessCPP" >> $RELEASE
@@ -24,15 +27,5 @@ echo "PVA_RPC_API_VERSION = 450" >> $SITE
 echo "HAVE_BOOST_NUM_PY = 1" >> $SITE
 make
 
-# Drop compiled .so file into site-packages
-cp lib/python$PY_VER/pvaccess.so $(PREFIX)/lib/python$PY_VER/site-packages
-
-# force build script to fail so it doesn't end up in build directory
-break everything!
-
-# # Copy libraries into $PREFIX/lib
-# PKGS="pvCommonCPP pvDataCPP pvAccessCPP normativeTypesCPP pvaClientCPP pvDatabaseCPP pvaPy pvaSrv"
-# for pkg in $PKGS ; do
-#   cp -av $PREFIX/epics-v4/$pkg/lib/$EPICS_HOST_ARCH/lib*so* $PREFIX/lib 2>/dev/null || : # linux
-#   #cp -av $PREFIX/epics-v4/$pkg/lib/$EPICS_HOST_ARCH/lib*dylib* $PREFIX/lib 2>/dev/null || :  # osx
-# done
+# Drop compiled pvaccess.so file into site-packages
+cp lib/python/$EPICS_HOST_ARCH/pvaccess.so $PREFIX/lib/python$PY_VER/site-packages
