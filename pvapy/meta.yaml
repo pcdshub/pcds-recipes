@@ -33,6 +33,7 @@ requirements:
     - epics-v4 4.6.0
     - python
     - numpy
+    - boost >=1.63
 
 test:
   imports:

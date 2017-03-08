@@ -20,8 +20,12 @@ else
   USE_M=""
 fi
 echo "PVA_PY_CPPFLAGS = -I$PREFIX/include -I$PREFIX/include/$PYINC$USE_M" >> $SITE
-echo "PVA_PY_LDFLAGS = -L/usr/lib64 -L$PREFIX/lib -l$PYINC$USE_M" >> $SITE
-echo "PVA_PY_SYS_LIBS = boost_python" >> $SITE
+if [ $PY3K ]; then
+  echo "PVA_PY_LDFLAGS = -L/usr/lib64 -L$PREFIX/lib -lboost_python3 -lboost_numpy -l$PYINC$USE_M" >> $SITE
+else
+  echo "PVA_PY_LDFLAGS = -L/usr/lib64 -L$PREFIX/lib -lboost_python -lboost_numpy -l$PYINC$USE_M" >> $SITE
+fi
+#echo "PVA_PY_SYS_LIBS = boost_python" >> $SITE
 echo "PVA_API_VERSION = 450" >> $SITE
 echo "PVA_RPC_API_VERSION = 450" >> $SITE
 echo "HAVE_BOOST_NUM_PY = 1" >> $SITE
