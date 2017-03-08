@@ -25,7 +25,6 @@ if [ $PY3K ]; then
 else
   echo "PVA_PY_LDFLAGS = -L/usr/lib64 -L$PREFIX/lib -lboost_python -lboost_numpy -l$PYINC$USE_M" >> $SITE
 fi
-#echo "PVA_PY_SYS_LIBS = boost_python" >> $SITE
 echo "PVA_API_VERSION = 450" >> $SITE
 echo "PVA_RPC_API_VERSION = 450" >> $SITE
 echo "HAVE_BOOST_NUM_PY = 1" >> $SITE
