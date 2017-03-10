@@ -1,0 +1,21 @@
+package:
+  name: pydaq
+  version: {{ environ.get("HUTCH") }}
+
+source:
+  path: .
+
+build:
+  number: 1
+  script_env:
+    - HUTCH
+
+requirements:
+  run:
+    - python {{PY_VER}}*,<3
+
+test:
+  imports:
+    - pydaq
+    - pycdb
+    - pyami
