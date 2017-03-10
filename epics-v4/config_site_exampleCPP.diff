@@ -1,0 +1,11 @@
+--- exampleCPP/configure/CONFIG_SITE    2016-09-18 10:22:27.000000000 -0700
++++ exampleCPP/configure/CONFIG_SITE    2017-03-09 15:56:33.175940400 -0800
+@@ -23,7 +23,7 @@
+
+ # To install files into a location other than $(TOP) define
+ #   INSTALL_LOCATION here.
+-#INSTALL_LOCATION=</path/name/to/install/top>
++INSTALL_LOCATION=$(PREFIX)/epics-v4/exampleCPP
+
+ # Set this when your IOC and the host use different paths
+ #   to access the application. This will be needed to boot

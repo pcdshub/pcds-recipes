@@ -3,15 +3,22 @@ install -d $PREFIX/bin
 install -d $PREFIX/lib
 install -d $PREFIX/epics-v4
 
-# Drop everything into the epics-v4 folder because I don't want to install 10 different directories
-cp -R * $PREFIX/epics-v4
+# Install copy of the perl tool so the comment makes sense
+cp -R tools $PREFIX/epics-v4
 
-# Make in prefix dir so hard-coded paths are fixed correctly
-cd $PREFIX/epics-v4
+PKGS="pvCommonCPP pvDataCPP pvAccessCPP normativeTypesCPP pvaClientCPP pvDatabaseCPP pvaSrv"
+
+# Create RELEASE.local in each configure directory to link dependencies
+# Do on both build directory and output directory
+for pkg in $PKGS ; do
+  mkdir $PREFIX/epics-v4/$pkg
+  echo "$pkg=$PREFIX/epics-v4/$pkg" >> "$pkg/configure/RELEASE.local"
+  echo "$pkg=$PREFIX/epics-v4/$pkg" >> "$PREFIX/epics-v4/$pkg/configure/RELEASE.local"
+done
+
 make -j$(getconf _NPROCESSORS_ONLN)
 
 # Copy libraries into $PREFIX/lib
-PKGS="pvCommonCPP pvDataCPP pvAccessCPP normativeTypesCPP pvaClientCPP pvDatabaseCPP pvaSrv"
 for pkg in $PKGS ; do
   cp -av $PREFIX/epics-v4/$pkg/lib/$EPICS_HOST_ARCH/lib*so* $PREFIX/lib 2>/dev/null || : # linux
   cp -av $PREFIX/epics-v4/$pkg/lib/$EPICS_HOST_ARCH/lib*dylib* $PREFIX/lib 2>/dev/null || :  # osx
