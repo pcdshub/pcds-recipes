@@ -9,9 +9,9 @@ cp -R tools $PREFIX/epics-v4
 PKGS="pvCommonCPP pvDataCPP pvAccessCPP normativeTypesCPP pvaClientCPP pvDatabaseCPP pvaSrv"
 
 # Create RELEASE.local in each configure directory to link dependencies
-# Do on both build directory and output directory
+# Do in both build directory and install directory
 for pkg in $PKGS ; do
-  mkdir $PREFIX/epics-v4/$pkg
+  mkdir -p $PREFIX/epics-v4/$pkg/configure
   echo "$pkg=$PREFIX/epics-v4/$pkg" >> "$pkg/configure/RELEASE.local"
   echo "$pkg=$PREFIX/epics-v4/$pkg" >> "$PREFIX/epics-v4/$pkg/configure/RELEASE.local"
 done
