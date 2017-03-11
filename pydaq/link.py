@@ -42,7 +42,7 @@ if __name__ == "__main__":
     common_root = os.path.join("/reg/g/pcds/dist/pds", hutch)
     daq_root = os.path.join(common_root, "current/build")
     daq_py_dir = os.path.join(daq_root, "pdsapp/lib/x86_64-linux")
-    ami_root = os.path.join(common_root, hutch, "ami-current/build")
+    ami_root = os.path.join(common_root, "ami-current/build")
     ami_py_dir = os.path.join(ami_root, "ami/lib/x86_64-linux")
 
     daq_so = os.path.join(daq_py_dir, package)
@@ -55,7 +55,7 @@ if __name__ == "__main__":
     else:
         raise RuntimeError("Could not find package {}".format(package))
 
-    deps = get_deps(daq_so)
+    deps = get_deps(target)
     lib_dir = os.path.join(os.environ["PREFIX"], "lib")
     install = os.path.join(lib_dir, "python" + os.environ["PY_VER"],
                            "site-packages", package)
