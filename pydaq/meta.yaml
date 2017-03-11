@@ -7,15 +7,13 @@ source:
 
 build:
   number: 1
+  script: python link.py pydaq
   script_env:
     - HUTCH
 
 requirements:
+  build:
+    - python {{PY_VER}}*,<3
+    - future # [py2k]
   run:
     - python {{PY_VER}}*,<3
-
-test:
-  imports:
-    - pydaq
-    - pycdb
-    - pyami
