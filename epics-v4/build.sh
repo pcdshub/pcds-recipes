@@ -6,6 +6,7 @@ install -d $PREFIX/epics-v4
 # Install copy of the perl tool so the comment makes sense
 # See makefile patch
 cp -R tools $PREFIX/epics-v4
+make config
 
 # Build exampleCPP in place to package the example code too.
 # (Also because we don't want to double the patch file count)
@@ -17,7 +18,6 @@ cp -R exampleCPP $PREFIX/epics-v4
 make -j$(getconf _NPROCESSORS_ONLN)
 
 # Make examples in $PREFIX to avoid wayward hard-coded work directories
-cp exampleCPP/configure/RELEASE.$EPICS_HOST_ARCH.Common $PREFIX/epics-v4/exampleCPP/configure
 cd $PREFIX/epics-v4/exampleCPP
 make
 
