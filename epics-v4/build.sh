@@ -3,12 +3,23 @@ install -d $PREFIX/bin
 install -d $PREFIX/lib
 install -d $PREFIX/epics-v4
 
-# Drop everything into the epics-v4 folder because I don't want to install 10 different directories
-cp -R * $PREFIX/epics-v4
+# Install copy of the perl tool so the comment makes sense
+# See makefile patch
+cp -R tools $PREFIX/epics-v4
+make config
 
-# Make in prefix dir so hard-coded paths are fixed correctly
-cd $PREFIX/epics-v4
+# Build exampleCPP in place to package the example code too.
+# (Also because we don't want to double the patch file count)
+# Copy these folders over to the install directory.
+cp -R exampleCPP $PREFIX/epics-v4
+
+# Installs to PREFIX/epics-v4 instead of the build top
+# See config_site patches
 make -j$(getconf _NPROCESSORS_ONLN)
+
+# Make examples in $PREFIX to avoid wayward hard-coded work directories
+cd $PREFIX/epics-v4/exampleCPP
+make
 
 # Copy libraries into $PREFIX/lib
 PKGS="pvCommonCPP pvDataCPP pvAccessCPP normativeTypesCPP pvaClientCPP pvDatabaseCPP pvaSrv"
