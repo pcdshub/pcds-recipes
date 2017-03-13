@@ -8,7 +8,6 @@ source:
   url: https://sourceforge.net/projects/epics-pvdata/files/4.6.0/EPICS-CPP-4.6.0.tar.gz
   fn: EPICS-CPP-4.6.0.tar.gz
   patches:
-    - config_site_exampleCPP.diff
     - config_site_normativeTypesCPP.diff
     - config_site_pvAccessCPP.diff
     - config_site_pvaClientCPP.diff

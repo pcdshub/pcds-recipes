@@ -4,21 +4,25 @@ install -d $PREFIX/lib
 install -d $PREFIX/epics-v4
 
 # Install copy of the perl tool so the comment makes sense
+# See makefile patch
 cp -R tools $PREFIX/epics-v4
 
-PKGS="pvCommonCPP pvDataCPP pvAccessCPP normativeTypesCPP pvaClientCPP pvDatabaseCPP pvaSrv"
+# Build exampleCPP in place to package the example code too.
+# (Also because we don't want to double the patch file count)
+# Copy these folders over to the install directory.
+cp -R exampleCPP $PREFIX/epics-v4
 
-# Create RELEASE.local in each configure directory to link dependencies
-# Do in both build directory and install directory
-for pkg in $PKGS ; do
-  mkdir -p $PREFIX/epics-v4/$pkg/configure
-  echo "$pkg=$PREFIX/epics-v4/$pkg" >> "$pkg/configure/RELEASE.local"
-  echo "$pkg=$PREFIX/epics-v4/$pkg" >> "$PREFIX/epics-v4/$pkg/configure/RELEASE.local"
-done
-
+# Installs to PREFIX/epics-v4 instead of the build top
+# See config_site patches
 make -j$(getconf _NPROCESSORS_ONLN)
 
+# Make examples in $PREFIX to avoid wayward hard-coded work directories
+cp exampleCPP/configure/RELEASE.$EPICS_HOST_ARCH.Common $PREFIX/epics-v4/exampleCPP/configure
+cd $PREFIX/epics-v4/exampleCPP
+make
+
 # Copy libraries into $PREFIX/lib
+PKGS="pvCommonCPP pvDataCPP pvAccessCPP normativeTypesCPP pvaClientCPP pvDatabaseCPP pvaSrv"
 for pkg in $PKGS ; do
   cp -av $PREFIX/epics-v4/$pkg/lib/$EPICS_HOST_ARCH/lib*so* $PREFIX/lib 2>/dev/null || : # linux
   cp -av $PREFIX/epics-v4/$pkg/lib/$EPICS_HOST_ARCH/lib*dylib* $PREFIX/lib 2>/dev/null || :  # osx
