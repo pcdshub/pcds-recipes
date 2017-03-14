@@ -35,7 +35,6 @@ for file in $BINS ; do
 done
 
 # deal with env export
-# this isn't standard like EPICS_BASE is, but it's useful for building pvaPy
 mkdir -p $PREFIX/etc/conda/activate.d
 mkdir -p $PREFIX/etc/conda/deactivate.d
 
@@ -43,10 +42,10 @@ ACTIVATE=$PREFIX/etc/conda/activate.d/epics_v4.sh
 DEACTIVATE=$PREFIX/etc/conda/deactivate.d/epics_v4.sh
 
 # set up
-echo "export EPICS4_BASE=$PREFIX/epics-v4" >> $ACTIVATE
+echo "export EPICS4_DIR=$PREFIX/epics-v4" >> $ACTIVATE
 
 # tear down
-echo "unset EPICS4_BASE" >> $DEACTIVATE
+echo "unset EPICS4_DIR" >> $DEACTIVATE
 
 # make sure activate and deactivate scripts have exec permissions
 chmod a+x $ACTIVATE
