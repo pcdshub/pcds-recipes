@@ -61,17 +61,24 @@ if __name__ == "__main__":
     install = os.path.join(lib_dir, "python" + os.environ["PY_VER"],
                            "site-packages", package)
     ln = "ln -s {0} {1}\n"
+    rm = "rm {}\n"
     links = ln.format(target, install)
+    unlinks = rm.format(install)
     for libname, path in deps.items():
         if common_root in path:
             links += ln.format(path, os.path.join(lib_dir, libname))
+            unlinks += rm.format(os.path.join(lib_dir, libname))
 
-    filename = os.path.join(os.environ["PREFIX"],
-                            "daq-links/install_{}.sh".format(module))
-    if not os.path.exists(filename):
-        os.makedirs(os.path.dirname(filename))
-    with open(filename, "w") as f:
-        f.write(links)
+    paths = []
+    for name in ("install", "uninstall"):
+        paths.append(os.path.join(os.environ["PREFIX"],
+                     "daq-links/{0}_{1}.sh".format(name, module)))
 
-    st = os.stat(filename)
-    os.chmod(filename, st.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+    for filename in paths:
+        if not os.path.exists(filename):
+            os.makedirs(os.path.dirname(filename))
+        with open(filename, "w") as f:
+            f.write(links)
+
+        st = os.stat(filename)
+        os.chmod(filename, st.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
