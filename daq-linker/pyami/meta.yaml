@@ -8,7 +8,7 @@ source:
 build:
   number: 1
   string: py{{ py }}
-  script: python make_installer.py pydaq
+  script: python make_installer.py pyami
   script_env:
     - HUTCH
 
