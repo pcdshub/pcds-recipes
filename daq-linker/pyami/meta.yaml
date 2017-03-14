@@ -1,0 +1,20 @@
+package:
+  name: pyami
+  version: {{ environ.get("HUTCH") }}
+
+source:
+  path: .
+
+build:
+  number: 1
+  string: py{{ py }}
+  script: python make_installer.py pyami
+  script_env:
+    - HUTCH
+
+requirements:
+  build:
+    - python {{PY_VER}}*,<3
+    - future # [py2k]
+  run:
+    - python {{PY_VER}}*,<3
