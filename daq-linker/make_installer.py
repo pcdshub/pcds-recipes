@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
     filename = os.path.join(os.environ["PREFIX"],
                             "daq-links/install_{}.sh".format(package))
-    if !os.path.exists(filename):
+    if not os.path.exists(filename):
         os.makedirs(os.path.dirname(filename))
     with open(filename, "w") as f:
         f.write(links)
