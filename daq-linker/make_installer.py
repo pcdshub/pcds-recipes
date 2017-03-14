@@ -33,12 +33,12 @@ if __name__ == "__main__":
         raise RuntimeError("Set HUTCH environment variable before linking.")
 
     try:
-        package = sys.argv[1]
+        module = sys.argv[1]
     except IndexError:
         raise RuntimeError("Provide name of daq python package to link")
 
     hutch = hutch.lower()
-    package = package + ".so"
+    package = module + ".so"
 
     common_root = os.path.join("/reg/g/pcds/dist/pds", hutch)
     daq_root = os.path.join(common_root, "current/build")
@@ -67,7 +67,7 @@ if __name__ == "__main__":
             links += ln.format(path, os.path.join(lib_dir, libname))
 
     filename = os.path.join(os.environ["PREFIX"],
-                            "daq-links/install_{}.sh".format(package))
+                            "daq-links/install_{}.sh".format(module))
     if not os.path.exists(filename):
         os.makedirs(os.path.dirname(filename))
     with open(filename, "w") as f:
