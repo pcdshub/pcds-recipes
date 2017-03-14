@@ -75,10 +75,14 @@ if __name__ == "__main__":
                      "daq-links/{0}_{1}.sh".format(name, module)))
 
     for filename in paths:
-        if not os.path.exists(filename):
-            os.makedirs(os.path.dirname(filename))
+        dirname = os.path.dirname(filename)
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
         with open(filename, "w") as f:
-            f.write(links)
+            if "uninstall" in filename:
+                f.write(unlinks)
+            else:
+                f.write(links)
 
         st = os.stat(filename)
         os.chmod(filename, st.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
