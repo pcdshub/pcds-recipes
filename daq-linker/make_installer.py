@@ -12,6 +12,7 @@ from builtins import *  # NOQA
 
 import sys
 import os
+import stat
 import subprocess
 import re
 
@@ -59,11 +60,17 @@ if __name__ == "__main__":
     lib_dir = os.path.join(os.environ["PREFIX"], "lib")
     install = os.path.join(lib_dir, "python" + os.environ["PY_VER"],
                            "site-packages", package)
-    links = [["ln", "-s", target, install]]
-
+    ln = "ln -s {0} {1}\n"
+    links = ln.format(target, install)
     for libname, path in deps.items():
         if common_root in path:
-            links.append(["ln", "-s", path, os.path.join(lib_dir, libname)])
+            links += ln.format(path, os.path.join(lib_dir, libname))
 
-    for link in links:
-        subprocess.check_output(link)
+    filename = os.path.join(os.environ["PREFIX"],
+                            "daq-links/install_{}.sh".format(package))
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    with open(filename, "w") as f:
+        f.write(links)
+
+    st = os.stat(filename)
+    os.chmod(filename, st.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
