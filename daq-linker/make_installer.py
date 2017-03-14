@@ -61,7 +61,7 @@ if __name__ == "__main__":
     install = os.path.join(lib_dir, "python" + os.environ["PY_VER"],
                            "site-packages", package)
     ln = "if [ ! -f {1} ]; then\n  ln -s {0} {1}\nfi\n"
-    rm = "if [ -f {0} ]; then\n  rm {0}\nfi\n"
+    rm = "if [ -L {0} ]; then\n  rm {0}\nfi\n"
     links = ln.format(target, install)
     unlinks = rm.format(install)
     for libname, path in deps.items():
