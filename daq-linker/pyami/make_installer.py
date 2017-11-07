@@ -48,7 +48,9 @@ if __name__ == "__main__":
         ami_root = daq_root
         common_root = daq_root
     else:
-        common_root = os.path.join("/reg/g/pcds/dist/pds", hutch)
+        common_root = "/reg/g/pcds/dist/pds"
+        if hutch != "current":
+            common_root = os.path.join(common_root, hutch)
         daq_root = os.path.join(common_root, "current/build")
         ami_root = os.path.join(common_root, "ami-current/build")
     arch_ext = "lib/x86_64-linux"
@@ -63,7 +65,8 @@ if __name__ == "__main__":
     elif os.path.exists(ami_so):
         target = ami_so
     else:
-        raise RuntimeError("Could not find package {}".format(package))
+        raise RuntimeError(("Could not find package dir for"
+                            "HUTCH={}").format(hutch))
 
     deps = get_deps(target)
     lib_dir = os.path.join(os.environ["PREFIX"], "lib")
