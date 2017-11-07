@@ -11,10 +11,11 @@ build:
   script: python make_installer.py pycdb
   script_env:
     - HUTCH
+    - DEV_DIR
 
 requirements:
   build:
-    - python {{PY_VER}}*,<3
+    - python {{PY_VER}}*
     - future # [py2k]
   run:
-    - python {{PY_VER}}*,<3
+    - python {{PY_VER}}*

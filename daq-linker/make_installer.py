@@ -38,16 +38,25 @@ if __name__ == "__main__":
         raise RuntimeError("Provide name of daq python package to link")
 
     hutch = hutch.lower()
-    package = module + ".so"
+    version = sys.version_info[0]
+    package_name = module + ".so"
+    package_ver = package_name + "." + str(version)
 
-    common_root = os.path.join("/reg/g/pcds/dist/pds", hutch)
-    daq_root = os.path.join(common_root, "current/build")
-    daq_py_dir = os.path.join(daq_root, "pdsapp/lib/x86_64-linux")
-    ami_root = os.path.join(common_root, "ami-current/build")
-    ami_py_dir = os.path.join(ami_root, "ami/lib/x86_64-linux")
+    if hutch == "dev":
+        # This is a dev build! Point DEV_DIR to the build directory
+        daq_root = os.environ["DEV_DIR"]
+        ami_root = daq_root
+        common_root = daq_root
+    else:
+        common_root = os.path.join("/reg/g/pcds/dist/pds", hutch)
+        daq_root = os.path.join(common_root, "current/build")
+        ami_root = os.path.join(common_root, "ami-current/build")
+    arch_ext = "lib/x86_64-linux"
+    daq_py_dir = os.path.join(daq_root, "pdsapp", arch_ext)
+    ami_py_dir = os.path.join(ami_root, "ami", arch_ext)
 
-    daq_so = os.path.join(daq_py_dir, package)
-    ami_so = os.path.join(ami_py_dir, package)
+    daq_so = os.path.join(daq_py_dir, package_ver)
+    ami_so = os.path.join(ami_py_dir, package_ver)
 
     if os.path.exists(daq_so):
         target = daq_so
@@ -59,7 +68,7 @@ if __name__ == "__main__":
     deps = get_deps(target)
     lib_dir = os.path.join(os.environ["PREFIX"], "lib")
     install = os.path.join(lib_dir, "python" + os.environ["PY_VER"],
-                           "site-packages", package)
+                           "site-packages", package_name)
     ln = "if [ ! -f {1} ]; then\n  ln -s {0} {1}\nfi\n"
     rm = "if [ -L {0} ]; then\n  rm {0}\nfi\n"
     links = ln.format(target, install)
