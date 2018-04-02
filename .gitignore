@@ -1,3 +1,4 @@
 *.swp
 *~
+conda-bld
 conda-bld-tst
