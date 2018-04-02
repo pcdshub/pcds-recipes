@@ -6,6 +6,8 @@ package:
 source:
   url: https://github.com/slaclab/pydm/archive/v{{ version }}.tar.gz
   fn: pydm-{{ version }}.tar.gz
+  patches:
+    - noprint.diff
 
 build:
   number: 1
