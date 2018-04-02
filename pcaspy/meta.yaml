@@ -1,0 +1,40 @@
+{% set version = "0.7.1" %}
+package:
+  name: pcaspy
+  version: {{ version }}
+
+source:
+  url: https://github.com/paulscherrerinstitute/pcaspy/archive/{{ version }}.tar.gz
+  fn: pcaspy-{{ version }}.tar.gz
+  patches:
+    - readline.patch # [linux]
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - wheel
+    - epics-base
+    - swig
+
+  run:
+    - python
+    - epics-base # [not win]
+
+test:
+  requires:
+    - numpy
+
+  source_files:
+    - test/gddTest.py
+
+  commands:
+    - python test/gddTest.py
+
+about:
+  home: https://github.com/paulscherrerinstitute/pcaspy
+  license: BSD
+
+# See
+# http://docs.continuum.io/conda/build.html for
+# more information about meta.yaml
