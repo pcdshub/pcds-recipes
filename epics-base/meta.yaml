@@ -21,6 +21,10 @@ requirements:
     - perl [win]
     - patch [win]
 
+test:
+  commands:
+    - caget -h
+
 about:
     home: http://www.aps.anl.gov/epics
     license: Epics Open License
