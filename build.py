@@ -2,18 +2,16 @@
 # Condensed version of nsls-ii's build scripts
 import argparse
 import shutil
+import subprocess
+import sys
 from pathlib import Path
 from socket import gethostname
-from subprocess import check_output, run, PIPE
 
 import binstar_client
 
-PACKAGES = ['epics-base']
-PYTHON = ['3.6']
-NUMPY = ['1.13']
-#PACKAGES = ['epics-base', 'pcaspy', 'pyca', 'pydm', 'pyepics']
-#PYTHON = ['3.5', '3.6']
-#NUMPY = ['1.11', '1.12', '1.13', '1.14']
+PACKAGES = ['epics-base', 'pcaspy', 'pyca', 'pydm', 'pyepics']
+PYTHON = ['3.5', '3.6']
+NUMPY = ['1.11', '1.12', '1.13', '1.14']
 BUILD_DIR = str(Path(__file__).parent / 'conda-bld')
 
 
@@ -40,7 +38,7 @@ def check_filename(package, channel, py=None, np=None):
     print('Checking build filename')
     args = build_args(package, channel, py=py, np=np) + ['--output']
     print(' '.join(args))
-    output = check_output(args, universal_newlines=True).strip('\n')
+    output = subprocess.check_output(args, universal_newlines=True).strip('\n')
     print(output)
     return output
 
@@ -49,14 +47,14 @@ def build(package, channel, py=None, np=None):
     print('Building {}'.format(package))
     args = build_args(package, channel, py=py, np=np)
     print(' '.join(args))
-    run(args, stdout=PIPE, stderr=PIPE)
+    subprocess.run(args, stdout=sys.stdout, stderr=subprocess.STDOUT)
 
 
 def upload(client, channel, filename):
     print('Uploading {}'.format(filename))
     args = ['anaconda', '-t', client.token, 'upload', '-u', channel, filename]
     print(' '.join(args))
-    run(args, stdout=PIPE, stderr=PIPE)
+    subprocess.run(args, stdout=sys.stdout, stderr=subprocess.STDOUT)
 
 
 def build_all():
@@ -84,10 +82,10 @@ def build_all():
     build_path.mkdir()
 
     for package in PACKAGES:
-        print('Check if we need to build {}'.format(package))
         for py in PYTHON:
             for np in NUMPY:
-                print('Checking python={}, numpy={}'.format(py, np))
+                print('Checking package={}, python={}, '
+                      'numpy={}'.format(package, py, np))
                 full_path = check_filename(package, channel, py=py, np=np)
                 short_path = '/'.join(full_path.split('/')[-2:])
                 if short_path in files:
