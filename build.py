@@ -4,7 +4,7 @@ import argparse
 import shutil
 from pathlib import Path
 from socket import gethostname
-from subprocess import check_output
+from subprocess import check_output, run, PIPE
 
 import binstar_client
 
@@ -40,7 +40,7 @@ def check_filename(package, channel, py=None, np=None):
     print('Checking build filename')
     args = build_args(package, channel, py=py, np=np) + ['--output']
     print(' '.join(args))
-    output = check_output(args, universal_newlines=True)
+    output = check_output(args, universal_newlines=True).strip('\n')
     print(output)
     return output
 
@@ -49,18 +49,14 @@ def build(package, channel, py=None, np=None):
     print('Building {}'.format(package))
     args = build_args(package, channel, py=py, np=np)
     print(' '.join(args))
-    output = check_output(args, universal_newlines=True)
-    print(output)
-    return output
+    run(args, stdout=PIPE, stderr=PIPE)
 
 
 def upload(client, channel, filename):
     print('Uploading {}'.format(filename))
     args = ['anaconda', '-t', client.token, 'upload', '-u', channel, filename]
     print(' '.join(args))
-    output = check_output(args, universal_newlines=True)
-    print(output)
-    return output
+    run(args, stdout=PIPE, stderr=PIPE)
 
 
 def build_all():
