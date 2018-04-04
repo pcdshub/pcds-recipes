@@ -30,10 +30,12 @@ ETC=$PREFIX/etc
 # set up
 echo "export EPICS_BASE="$EPICS_BASE >> $ACTIVATE
 echo "export EPICS_HOST_ARCH="$EPICS_HOST_ARCH >> $ACTIVATE
+echo "export EPICS_CA_MAX_ARRAY_BYTES=40000000" >> $ACTIVATE
 
 # tear down
 echo "unset EPICS_BASE" >> $DEACTIVATE
 echo "unset EPICS_HOST_ARCH" >> $DEACTIVATE
+echo "unset EPICS_CA_MAX_ARRAY_BYTES" >> $DEACTIVATE
 
 # clean up after self
 unset ACTIVATE
