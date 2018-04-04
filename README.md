@@ -1,4 +1,8 @@
 # pcds-recipes
 Collection of conda recipes for PCDS software at LCLS.
 
-Python packages should, in general, contain working conda recipes within the project for proper versioning. This repository is then for packages that don't include recipes but don't belong on conda-forge and for non-python packages for which we must write a custom recipe. The packages here generally won't have much use outside of LCLS's EPICS-centric controls environment.
+This repository is for conda recipes for packages that don't automatically
+upload to the pcds-tag channel, but also can't be found on conda-forge or
+in defaults. These tend to be community packages like EPICS, packages from
+other groups at SLAC, and packages that we need to patch for some reason or
+another.
