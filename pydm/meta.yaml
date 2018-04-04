@@ -7,7 +7,7 @@ source:
   url: https://github.com/slaclab/pydm/archive/v{{ version }}.tar.gz
   fn: pydm-{{ version }}.tar.gz
   patches:
-    - noprint.diff
+    - epics_plugin.diff
 
 build:
   number: 1
