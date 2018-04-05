@@ -9,7 +9,7 @@ from socket import gethostname
 
 import binstar_client
 
-PACKAGES = ['epics-base', 'pcaspy', 'pyca', 'pydm', 'pyepics']
+PACKAGES = ['epics-base', 'pcaspy', 'pyca', 'pydm', 'pyepics', 'pyqt']
 PYTHON = ['3.5', '3.6']
 NUMPY = ['1.11', '1.12', '1.13', '1.14']
 BUILD_DIR = str(Path(__file__).parent / 'conda-bld')
