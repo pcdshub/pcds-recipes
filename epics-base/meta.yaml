@@ -1,3 +1,4 @@
+
 package:
     name: epics-base
     version: "3.14.12.6"
@@ -9,15 +10,20 @@ source:
         - config_site.diff [not win]
         - config_common.diff [not win]
         - config_readline.diff [linux]
+        - bind-returns-eacces.patch
 
 build:
-  number: 1
+  number: 2
 
 requirements:
   build:
     - m2w64-make [win]
     - perl [win]
     - patch [win]
+
+test:
+  commands:
+    - caget -h
 
 about:
     home: http://www.aps.anl.gov/epics

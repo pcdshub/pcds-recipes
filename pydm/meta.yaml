@@ -1,0 +1,37 @@
+{% set version = "1.1.0" %}
+package:
+  name: pydm 
+  version: {{ version }}
+
+source:
+  url: https://github.com/slaclab/pydm/archive/v{{ version }}.tar.gz
+  fn: pydm-{{ version }}.tar.gz
+  patches:
+    - epics_plugin.diff
+
+build:
+  number: 1
+
+requirements:
+  build:
+    - python
+    - setuptools
+
+  run:
+    - python
+    - numpy >=1.11.0
+    - scipy >=0.12.0
+    - pyepics >=3.2.7
+    - requests >=1.1.0
+    - psutil
+    - pyqt >=5
+    - pyqtgraph
+
+test:
+    imports:
+      - pydm 
+
+about:
+  home: https://github.com/slaclab/pydm
+  license: SLAC Open License
+  summary: Python Display Manager
