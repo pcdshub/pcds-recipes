@@ -1,0 +1,30 @@
+*** qpy/QtCore/qpycore_post_init.cpp.in	2017-11-16 11:29:57.188441545 -0800
+--- qpy/QtCore/qpycore_post_init.cpp.in	2017-11-16 11:28:43.940866654 -0800
+***************
+*** 21,26 ****
+--- 21,29 ----
+  #include <Python.h>
+  
+  #include <QMutex>
++ #include <QVector>
++ #include <QList>
++ #include <QAbstractItemModel>
+  
+  #include "qpycore_api.h"
+  #include "qpycore_objectified_strings.h"
+***************
+*** 83,88 ****
+--- 86,98 ----
+      PyQt_PyObject::metatype = qRegisterMetaType<PyQt_PyObject>("PyQt_PyObject");
+      qRegisterMetaTypeStreamOperators<PyQt_PyObject>("PyQt_PyObject");
+  
++     // MCB - Emitting dataChanged, layoutChanged, or layoutAboutToBeChanged
++     // for a QAbstractItemModel will fail, unless this is done.
++     // We can't do it in python, and Qt doesn't want to do it, so here it goes.
++     qRegisterMetaType<QVector<int> >("QVector<int>");
++     qRegisterMetaType<QList<QPersistentModelIndex> >("QList<QPersistentModelIndex>");
++     qRegisterMetaType<QAbstractItemModel::LayoutChangeHint>("QAbstractItemModel::LayoutChangeHint");
++ 
+      // Register the lazy attribute getter.
+      if (sipRegisterAttributeGetter(sipType_QObject, qpycore_get_lazy_attr) < 0)
+          Py_FatalError("PyQt5.QtCore: Failed to register attribute getter");
