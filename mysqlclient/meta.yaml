@@ -1,0 +1,41 @@
+{% set name = "mysqlclient" %}
+{% set version = "1.3.12" %}
+{% set file_ext = "tar.gz" %}
+{% set hash_type = "sha256" %}
+{% set hash_value = "2d9ec33de39f4d9c64ad7322ede0521d85829ce36a76f9dd3d6ab76a9c8648e5" %}
+
+package:
+  name: '{{ name|lower }}'
+  version: '{{ version }}'
+
+source:
+  fn: '{{ name }}-{{ version }}.{{ file_ext }}'
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ file_ext }}
+  '{{ hash_type }}': '{{ hash_value }}'
+
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  host:
+    - python
+    - setuptools
+  run:
+    - python
+
+about:
+  home: https://github.com/PyMySQL/mysqlclient-python
+  license: GNU General Public License (GPL)
+  license_family: LGPL
+  license_file: ''
+  summary: Python interface to MySQL
+  description: "=========================\nPython interface to MySQL\n=========================\n\nmysqlclient is a fork of MySQL-python. It adds Python 3 support\nand fixed many bugs.\n\nMySQLdb is an\
+    \ interface to the popular MySQL_ database server for\nPython. The design goals are:\n\n- Compliance with Python database API version 2.0 [PEP-0249]_\n- Thread-safety\n- Thread-friendliness (threads\
+    \ will not block each other)\n\nMySQL-5.5 through 5.7 and Python 2.7, 3.4+ are currently supported.\nPyPy is supported too.\n\nMySQLdb is `Free Software`_.\n\n.. _MySQL: http://www.mysql.com/\n.. _`Free\
+    \ Software`: http://www.gnu.org/\n.. [PEP-0249] https://www.python.org/dev/peps/pep-0249/"
+  doc_url: ''
+  dev_url: ''
+
+extra:
+  recipe-maintainers: ''
