@@ -58,7 +58,7 @@ def check_all(files, channel):
                 args = (files, to_build, index, package, channel, py, np)
                 if new_package:
                     # Do the first by itself or conda build may throw errors
-                    res = pool.apply(func=_check_thread, args=args)
+                    pool.apply(func=_check_thread, args=args)
                     new_package = False
                 else:
                     # Do the rest in parallel
