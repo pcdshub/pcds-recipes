@@ -120,19 +120,18 @@ def build_all():
     build_path.mkdir()
 
     to_build = check_all(files, channel)
-    built = set()
+    built = []
 
     num = 0
     for _, (package, channel, py, np, full_path) in sorted(to_build.items()):
         if full_path not in built:
             num += 1
-            built.add(full_path)
-            if args.no_build:
-                print(full_path)
-            else:
+            built.append(full_path)
+            if not args.no_build:
                 build(package, channel, py=py, np=np)
                 upload(client, channel, full_path)
 
+    print('')
     if num == 0:
         print('Done. Built 0 packages.')
     else:
