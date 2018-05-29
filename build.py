@@ -4,6 +4,8 @@ import argparse
 import shutil
 import subprocess
 import sys
+from multiprocessing import cpu_count
+from multiprocessing.pool import ThreadPool
 from pathlib import Path
 from socket import gethostname
 
@@ -27,7 +29,8 @@ def get_uploaded_files(client, channel):
 def build_args(package, channel, py=None, np=None, dev=False):
     args = ['conda', 'build', package,
             '-c', channel, '-c', 'defaults', '-c', 'conda-forge',
-            '--override', '--output-folder', BUILD_DIR]
+            '--override', '--output-folder', BUILD_DIR,
+            '--old-build-string']
     if py is not None:
         args.extend(['--python', py])
     if np is not None:
@@ -36,12 +39,39 @@ def build_args(package, channel, py=None, np=None, dev=False):
 
 
 def check_filename(package, channel, py=None, np=None):
-    print('Checking build filename')
     args = build_args(package, channel, py=py, np=np) + ['--output']
     print(' '.join(args))
     output = subprocess.check_output(args, universal_newlines=True).strip('\n')
-    print(output)
     return output
+
+
+def check_all(files, channel):
+    to_build = {}
+    index = 0
+    pool = ThreadPool(processes=cpu_count()-1)
+    results = []
+
+    for package in PACKAGES:
+        for py in PYTHON:
+            for np in NUMPY:
+                res = pool.apply_async(func=_check_thread,
+                                       args=(files, to_build, index,
+                                             package, channel, py, np))
+                results.append(res)
+                index += 1
+
+    for res in results:
+        res.wait()
+
+    return to_build
+
+
+def _check_thread(files, to_build, index, package, channel, py, np):
+    full_path = check_filename(package, channel, py=py, np=np)
+    short_path = '/'.join(full_path.split('/')[-2:])
+    if short_path not in files:
+        files.add(short_path)
+        to_build[index] = (package, channel, py, np, full_path)
 
 
 def build(package, channel, py=None, np=None):
@@ -74,6 +104,7 @@ def build_all():
 
     client = binstar_client.Binstar(token=token)
     files = get_uploaded_files(client, channel)
+    files = set()
 
     try:
         shutil.rmtree(BUILD_DIR)
@@ -82,19 +113,14 @@ def build_all():
     build_path = Path(BUILD_DIR)
     build_path.mkdir()
 
-    for package in PACKAGES:
-        for py in PYTHON:
-            for np in NUMPY:
-                print('Checking package={}, python={}, '
-                      'numpy={}'.format(package, py, np))
-                full_path = check_filename(package, channel, py=py, np=np)
-                short_path = '/'.join(full_path.split('/')[-2:])
-                if short_path in files:
-                    print('Skip {}'.format(short_path))
-                else:
-                    files.add(short_path)
-                    build(package, channel, py=py, np=np)
-                    upload(client, channel, full_path)
+    to_build = check_all(files, channel)
+    built = set()
+
+    for _, (package, channel, py, np, full_path) in sorted(to_build.items()):
+        if full_path not in built:
+            built.add(full_path)
+            build(package, channel, py=py, np=np)
+            upload(client, channel, full_path)
 
 
 if __name__ == '__main__':
