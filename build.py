@@ -64,7 +64,7 @@ def check_all(files, channel):
                     # Do the rest in parallel
                     res = pool.apply_async(func=_check_thread, args=args)
                     results.append(res)
-                    index += 1
+                index += 1
 
     for res in results:
         res.wait()
