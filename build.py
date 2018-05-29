@@ -122,14 +122,18 @@ def build_all():
     to_build = check_all(files, channel)
     built = set()
 
+    num = 0
     for _, (package, channel, py, np, full_path) in sorted(to_build.items()):
         if full_path not in built:
+            num += 1
             built.add(full_path)
             if args.no_build:
                 print(full_path)
             else:
                 build(package, channel, py=py, np=np)
                 upload(client, channel, full_path)
+
+    print('Done. Built {} packages'.format(num))
 
 
 if __name__ == '__main__':
