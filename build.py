@@ -133,7 +133,12 @@ def build_all():
                 build(package, channel, py=py, np=np)
                 upload(client, channel, full_path)
 
-    print('Done. Built {} packages'.format(num))
+    if num == 0:
+        print('Done. Built 0 packages.')
+    else:
+        print('Done. Built {} packages:'.format(num))
+        for pkg in built:
+            print(pkg)
 
 
 if __name__ == '__main__':
