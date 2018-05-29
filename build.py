@@ -52,13 +52,19 @@ def check_all(files, channel):
     results = []
 
     for package in PACKAGES:
+        new_package = True
         for py in PYTHON:
             for np in NUMPY:
-                res = pool.apply_async(func=_check_thread,
-                                       args=(files, to_build, index,
-                                             package, channel, py, np))
-                results.append(res)
-                index += 1
+                args = (files, to_build, index, package, channel, py, np)
+                if new_package:
+                    # Do the first by itself or conda build may throw errors
+                    res = pool.apply(func=_check_thread, args=args)
+                    new_package = False
+                else:
+                    # Do the rest in parallel
+                    res = pool.apply_async(func=_check_thread, args=args)
+                    results.append(res)
+                    index += 1
 
     for res in results:
         res.wait()
@@ -97,6 +103,7 @@ def build_all():
     parser = argparse.ArgumentParser()
     parser.add_argument('--channel', action='store', required=True)
     parser.add_argument('--token', action='store', required=True)
+    parser.add_argument('--no-build', action='store_true', required=False)
     args = parser.parse_args()
 
     channel = args.channel
@@ -104,7 +111,6 @@ def build_all():
 
     client = binstar_client.Binstar(token=token)
     files = get_uploaded_files(client, channel)
-    files = set()
 
     try:
         shutil.rmtree(BUILD_DIR)
@@ -119,8 +125,11 @@ def build_all():
     for _, (package, channel, py, np, full_path) in sorted(to_build.items()):
         if full_path not in built:
             built.add(full_path)
-            build(package, channel, py=py, np=np)
-            upload(client, channel, full_path)
+            if args.no_build:
+                print(full_path)
+            else:
+                build(package, channel, py=py, np=np)
+                upload(client, channel, full_path)
 
 
 if __name__ == '__main__':
