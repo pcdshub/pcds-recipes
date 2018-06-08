@@ -1,4 +1,4 @@
-{% set version = "1.1.0" %}
+{% set version = "1.2.0" %}
 package:
   name: pydm 
   version: {{ version }}
@@ -6,8 +6,6 @@ package:
 source:
   url: https://github.com/slaclab/pydm/archive/v{{ version }}.tar.gz
   fn: pydm-{{ version }}.tar.gz
-  patches:
-    - epics_plugin.diff
 
 build:
   number: 1
