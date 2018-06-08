@@ -4,6 +4,8 @@ import argparse
 import shutil
 import subprocess
 import sys
+from multiprocessing import cpu_count
+from multiprocessing.pool import ThreadPool
 from pathlib import Path
 from socket import gethostname
 
@@ -11,8 +13,8 @@ import binstar_client
 
 PACKAGES = ['epics-base', 'pcaspy', 'pyca', 'pydm', 'pyepics', 'pyqt',
             'mysqlclient']
-PYTHON = ['3.5', '3.6']
-NUMPY = ['1.11', '1.12', '1.13', '1.14']
+PYTHON = ['3.6', '3.5']
+NUMPY = ['1.14', '1.13', '1.12', '1.11']
 BUILD_DIR = str(Path(__file__).parent / 'conda-bld')
 
 
@@ -27,7 +29,8 @@ def get_uploaded_files(client, channel):
 def build_args(package, channel, py=None, np=None, dev=False):
     args = ['conda', 'build', package,
             '-c', channel, '-c', 'defaults', '-c', 'conda-forge',
-            '--override', '--output-folder', BUILD_DIR]
+            '--override', '--output-folder', BUILD_DIR,
+            '--old-build-string']
     if py is not None:
         args.extend(['--python', py])
     if np is not None:
@@ -36,12 +39,45 @@ def build_args(package, channel, py=None, np=None, dev=False):
 
 
 def check_filename(package, channel, py=None, np=None):
-    print('Checking build filename')
     args = build_args(package, channel, py=py, np=np) + ['--output']
     print(' '.join(args))
     output = subprocess.check_output(args, universal_newlines=True).strip('\n')
-    print(output)
     return output
+
+
+def check_all(files, channel):
+    to_build = {}
+    index = 0
+    pool = ThreadPool(processes=cpu_count()-1)
+    results = []
+
+    for package in PACKAGES:
+        new_package = True
+        for py in PYTHON:
+            for np in NUMPY:
+                args = (files, to_build, index, package, channel, py, np)
+                if new_package:
+                    # Do the first by itself or conda build may throw errors
+                    pool.apply(func=_check_thread, args=args)
+                    new_package = False
+                else:
+                    # Do the rest in parallel
+                    res = pool.apply_async(func=_check_thread, args=args)
+                    results.append(res)
+                index += 1
+
+    for res in results:
+        res.wait()
+
+    return to_build
+
+
+def _check_thread(files, to_build, index, package, channel, py, np):
+    full_path = check_filename(package, channel, py=py, np=np)
+    short_path = '/'.join(full_path.split('/')[-2:])
+    if short_path not in files:
+        files.add(short_path)
+        to_build[index] = (package, channel, py, np, full_path)
 
 
 def build(package, channel, py=None, np=None):
@@ -67,6 +103,7 @@ def build_all():
     parser = argparse.ArgumentParser()
     parser.add_argument('--channel', action='store', required=True)
     parser.add_argument('--token', action='store', required=True)
+    parser.add_argument('--no-build', action='store_true', required=False)
     args = parser.parse_args()
 
     channel = args.channel
@@ -82,19 +119,25 @@ def build_all():
     build_path = Path(BUILD_DIR)
     build_path.mkdir()
 
-    for package in PACKAGES:
-        for py in PYTHON:
-            for np in NUMPY:
-                print('Checking package={}, python={}, '
-                      'numpy={}'.format(package, py, np))
-                full_path = check_filename(package, channel, py=py, np=np)
-                short_path = '/'.join(full_path.split('/')[-2:])
-                if short_path in files:
-                    print('Skip {}'.format(short_path))
-                else:
-                    files.add(short_path)
-                    build(package, channel, py=py, np=np)
-                    upload(client, channel, full_path)
+    to_build = check_all(files, channel)
+    built = []
+
+    num = 0
+    for _, (package, channel, py, np, full_path) in sorted(to_build.items()):
+        if full_path not in built:
+            num += 1
+            built.append(full_path)
+            if not args.no_build:
+                build(package, channel, py=py, np=np)
+                upload(client, channel, full_path)
+
+    print('')
+    if num == 0:
+        print('Done. Built 0 packages.')
+    else:
+        print('Done. Built {} packages:'.format(num))
+        for pkg in built:
+            print(pkg)
 
 
 if __name__ == '__main__':
