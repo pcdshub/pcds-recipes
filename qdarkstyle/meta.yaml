@@ -1,0 +1,25 @@
+{% set version = "2.5.4" %}
+package:
+    name: qdarkstyle
+    version: {{ version }}
+
+source:
+    url: https://github.com/pcdshub/QDarkStyleSheet/archive/{{ version }}.tar.gz
+    fn: QDarkStyleSheet-{{ version }}.tar.gz
+
+build:
+    number: 1
+    script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+    build:
+        - python
+        - setuptools
+    run:
+        - python
+        - pyqt
+
+about:
+    home: https://github.com/pcdshub/QDarkStyleSheet
+    license: MIT
+    summary: A dark style sheet for QtWidgets application
