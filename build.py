@@ -12,7 +12,7 @@ from socket import gethostname
 import binstar_client
 
 PACKAGES = ['epics-base', 'pcaspy', 'pyca', 'pydm', 'pyepics', 'pyqt',
-            'mysqlclient']
+            'mysqlclient', 'qdarkstyle']
 PYTHON = ['3.6', '3.5']
 NUMPY = ['1.14', '1.13', '1.12', '1.11']
 BUILD_DIR = str(Path(__file__).parent / 'conda-bld')
