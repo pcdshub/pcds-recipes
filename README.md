@@ -21,11 +21,22 @@ another.
 - Make a PR and explain what the package is for
 
 ## Building
-- Generate a valid anaconda token, preferrably one that will expire soon
-- Activate a conda environment with `conda-build=3.5.1` and `anaconda-client`
-  installed
-- `./build.py --channel pcds-tag --token $ANACONDA_TOKEN`
+`build.py` will slowly check all the package variants in the build matrix and
+build the variants that are missing on `pcds-tag`. Yes, we can make this faster
+with some effort.
 
-This will slowly check all the package variants in the build matrix and build
-the variants that are missing on `pcds-tag`. Yes, we can make this faster with
-some effort.
+### Requirements
+- You must have the `anaconda-client` package installed as well as be in an
+  Conda environment with `conda-build=3.5.1`
+- You must have a valid `Anaconda.org` profile that has access to the
+  `pcds-tag` organization
+
+### How To
+- Generate a valid Anaconda token
+```bash
+$ANACONDA_TOKEN=$(anaconda auth --create --name build --org pcds-tag --scopes api --max-age 1800)
+```
+- Build and upload
+```bash
+./build.py --channel pcds-tag --token $ANACONDA_TOKEN
+```
