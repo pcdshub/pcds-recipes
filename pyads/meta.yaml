@@ -1,0 +1,39 @@
+{% set name = "pyads" %}
+{% set version = "2.2.13" %}
+{% set file_ext = "tar.gz" %}
+{% set hash_type = "sha256" %}
+{% set hash_value = "5c0856335a3fe8c06ac7a980e938a8dd91bfe00c45720884dc443b6694461cbc" %}
+
+package:
+  name: '{{ name|lower }}'
+  version: '{{ version }}'
+
+source:
+  fn: '{{ name }}-{{ version }}.{{ file_ext }}'
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ file_ext }}
+  '{{ hash_type }}': '{{ hash_value }}'
+
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  host:
+    - python
+    - setuptools
+  run:
+    - python
+
+test:
+  imports:
+    - pyads
+    - pyads.testserver_ex
+  requires:
+    - pytest
+    - pytest-cov
+
+about:
+  home: https://github.com/MrLeeh/pyads
+  license: MIT License
+  license_family: MIT
+  summary: Python wrapper for TwinCAT ADS library
