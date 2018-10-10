@@ -1,4 +1,4 @@
-{% set version = "1.4.2" %}
+{% set version = "1.5.0" %}
 package:
   name: pydm 
   version: {{ version }}
@@ -24,6 +24,7 @@ requirements:
     - psutil
     - pyqt >=5
     - pyqtgraph
+    - qtpy
 
 test:
     imports:
