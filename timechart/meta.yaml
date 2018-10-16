@@ -1,0 +1,30 @@
+{% set version = "1.0.0" %}
+
+package:
+  name: timechart
+  version: {{ version }}
+
+source:
+  url: https://github.com/slaclab/timechart/archive/v{{ version }}.tar.gz
+  fn: timechart-{{ version }}.tar.gz
+
+build:
+  number: 1
+
+requirements:
+  build:
+    - python
+    - setuptools
+
+  run:
+    - python
+    - pydm >=1.5.0
+
+test:
+    imports:
+      - timechart
+
+about:
+  home: https://github.com/slaclab/timechart
+  license: SLAC Open License
+  summary: Charting Tool based on PyDM
