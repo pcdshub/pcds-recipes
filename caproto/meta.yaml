@@ -1,4 +1,4 @@
-{% set version = "0.1.1" %}
+{% set version = "0.2.0" %}
 
 package:
     name: caproto
@@ -22,11 +22,12 @@ requirements:
         - netifaces
         - numpy
         - ophyd
+        - python
 
 test:
     imports:
         - caproto
 
 about:
-    home: https://github.com/NSLS-II/bluesky
-license: BSD
+    home: https://github.com/NSLS-II/caproto
+    license: BSD
