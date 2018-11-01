@@ -32,9 +32,10 @@ with some effort.
   `pcds-tag` organization
 
 ### How To
-- Generate a valid Anaconda token
+- Generate a valid Anaconda token (remove old token first, then create new)
 ```bash
-$ANACONDA_TOKEN=$(anaconda auth --create --name build --org pcds-tag --scopes api --max-age 1800)
+$ anaconda auth --remove build --org pcds-tag
+$ ANACONDA_TOKEN=$(anaconda auth --create --name build --org pcds-tag --scopes api --max-age 1800)
 ```
 - Build and upload
 ```bash
