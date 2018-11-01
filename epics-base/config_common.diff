@@ -1,6 +1,6 @@
 --- base-3.14.12.4/configure/CONFIG_COMMON	2013-12-16 16:56:27.000000000 -0500
-+++ configure/CONFIG_COMMON	2015-02-08 10:08:38.789412249 -0500
-@@ -200,7 +200,7 @@
++++ configure/CONFIG_COMMON	2018-10-29 10:46:39.956008400 -0700
+@@ -198,7 +198,7 @@
  OP_SYS_INCLUDES =
  
  # Makefile specific flags
@@ -9,3 +9,18 @@
  USR_CFLAGS =
  USR_CXXFLAGS =
  USR_LDFLAGS =
+@@ -382,10 +382,10 @@
+ 
+ #---------------------------------------------------------------
+ # Installed file permissions
+-BIN_PERMISSIONS = 555
+-LIB_PERMISSIONS = 444
+-SHRLIB_PERMISSIONS = 555
+-INSTALL_PERMISSIONS = 444
++BIN_PERMISSIONS = 775
++LIB_PERMISSIONS = 664
++SHRLIB_PERMISSIONS = 775
++INSTALL_PERMISSIONS = 664
+ 
+ #---------------------------------------------------------------
+ #
