@@ -34,7 +34,7 @@ with some effort.
 ### How To
 - Generate a valid Anaconda token (remove old token first, then create new)
 ```bash
-$ anaconda auth --remove build
+$ anaconda auth --remove build --org pcds-tag
 $ ANACONDA_TOKEN=$(anaconda auth --create --name build --org pcds-tag --scopes api --max-age 1800)
 ```
 - Build and upload
