@@ -95,10 +95,6 @@ def upload(client, channel, filename):
 
 
 def build_all():
-    allowed_host = 'psbuild-rhel6'
-    if gethostname() != allowed_host:
-        print('You should be running this on {}!'.format(allowed_host))
-        return
     print('Running build script')
     parser = argparse.ArgumentParser()
     parser.add_argument('--channel', action='store', required=True)
