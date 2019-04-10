@@ -1,4 +1,4 @@
-{% set version = "3.3.0" %}
+{% set version = "3.3.3" %}
 package:
     name: pyepics
     version: {{ version }}
