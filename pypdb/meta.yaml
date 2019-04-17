@@ -1,0 +1,27 @@
+package:
+  name: pypdb 
+  version: v0.1.0
+
+source:
+  git_url: https://github.com/epicsdeb/pypdb.git
+  git_rev: 4ad4016
+
+build:
+  number: 1
+
+requirements:
+  build:
+    - python
+    - setuptools
+
+  run:
+    - python
+    - ply >=3.4
+test:
+    imports:
+      - pyPDB
+
+about:
+  home: https://github.com/epicsdeb/pypdb
+  license: Argonne National Laboratory License
+  summary: EPICS Database Linter
