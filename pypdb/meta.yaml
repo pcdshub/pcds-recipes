@@ -24,4 +24,4 @@ test:
 about:
   home: https://github.com/epicsdeb/pypdb
   license: Argonne National Laboratory License
-  summary: EPICS Database Linter
+  summary: Python tools for EPICS Process Databases, including DB and DBD linters
