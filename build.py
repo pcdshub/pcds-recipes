@@ -11,8 +11,9 @@ from socket import gethostname
 
 import binstar_client
 
-PACKAGES = ['epics-base', 'pcaspy', 'pyca', 'pydm', 'pyepics', 'pyqt',
-            'mysqlclient', 'qdarkstyle', 'caproto', 'timechart']
+PACKAGES = [pkg for pkg in os.listdir()
+            if Path(pkg).is_dir() and (Path(pkg) / 'meta.yaml').exists()]
+
 PYTHON = ['3.6', '3.5']
 NUMPY = ['1.14', '1.13', '1.12', '1.11']
 BUILD_DIR = str(Path(__file__).parent / 'conda-bld')
