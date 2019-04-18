@@ -32,6 +32,7 @@ with some effort.
   `pcds-tag` organization
 
 ### How To
+Use the `build.sh` script to do everything at once, or follow the steps:
 - Generate a valid Anaconda token (remove old token first, then create new)
 ```bash
 $ anaconda auth --remove build --org pcds-tag
