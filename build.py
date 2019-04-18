@@ -1,16 +1,20 @@
 #!/usr/bin/env python
 # Condensed version of nsls-ii's build scripts
 import argparse
+import logging
 import os
 import shutil
 import subprocess
 import sys
+from logging.handlers import RotatingFileHandler
 from multiprocessing import cpu_count
 from multiprocessing.pool import ThreadPool
 from pathlib import Path
 from socket import gethostname
 
 import binstar_client
+
+logger = logging.getLogger('pcds_recipes.build')
 
 PACKAGES = [pkg for pkg in os.listdir()
             if Path(pkg).is_dir() and (Path(pkg) / 'meta.yaml').exists()]
@@ -21,7 +25,7 @@ BUILD_DIR = str(Path(__file__).parent / 'conda-bld')
 
 
 def get_uploaded_files(client, channel):
-    print('Checking uploaded files')
+    logger.info('Checking uploaded files')
     files = set()
     for fl in client.show_channel('main', channel)['files']:
         files.add(fl['basename'])
@@ -42,9 +46,7 @@ def build_args(package, channel, py=None, np=None, dev=False):
 
 def check_filename(package, channel, py=None, np=None):
     args = build_args(package, channel, py=py, np=np) + ['--output']
-    print(' '.join(args))
-    output = subprocess.check_output(args, universal_newlines=True).strip('\n')
-    return output
+    return run_and_log(args).strip('\n')
 
 
 def check_all(files, channel, packages=None):
@@ -84,21 +86,67 @@ def _check_thread(files, to_build, index, package, channel, py, np):
 
 
 def build(package, channel, py=None, np=None):
-    print('Building {}'.format(package))
+    logger.info('Building {}'.format(package))
     args = build_args(package, channel, py=py, np=np)
-    print(' '.join(args))
-    subprocess.run(args, stdout=sys.stdout, stderr=subprocess.STDOUT)
+    run_and_log(args)
 
 
 def upload(client, channel, filename):
-    print('Uploading {}'.format(filename))
+    logger.info('Uploading {}'.format(filename))
     args = ['anaconda', '-t', client.token, 'upload', '-u', channel, filename]
-    print(' '.join(args))
-    subprocess.run(args, stdout=sys.stdout, stderr=subprocess.STDOUT)
+    run_and_log(args)
+
+
+def run_and_log(args):
+    logger.info(' '.join(args))
+    txt = ''
+    process = subprocess.Popen(args,
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.STDOUT,
+                               universal_newlines=True)
+    with process.stdout as pipe:
+        for line in iter(pipe.readline, ''):
+            logger.info(line.strip('\n'))
+            txt += line
+    return txt
+
+
+def configure_logger():
+    log_dir = Path(os.path.dirname(__file__)) / 'logs'
+    log_file = log_dir / 'build.log'
+
+    if not log_dir.exists():
+        log_dir.mkdir(parents=True)
+    if log_file.exists():
+        do_rollover = True
+    else:
+        do_rollover = False
+
+    stream_handler = logging.StreamHandler()
+    file_handler = RotatingFileHandler(str(log_file),
+                                       backupCount=5,
+                                       encoding=None,
+                                       delay=0)
+    if do_rollover:
+        file_handler.doRollover()
+    formatter = logging.Formatter(fmt=('%(asctime)s.%(msecs)03d '
+                                       '%(name)-18s '
+                                       '%(levelname)-8s '
+                                       '%(threadName)-10s '
+                                       '%(message)s'),
+                                  datefmt='%H:%M:%S')
+
+    stream_handler.setFormatter(formatter)
+    file_handler.setFormatter(formatter)
+
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(stream_handler)
+    logger.addHandler(file_handler)
+
 
 
 def build_all():
-    print('Running build script')
+    logger.info('Running build script')
     parser = argparse.ArgumentParser()
     parser.add_argument('packages', nargs='*')
     parser.add_argument('--channel', action='store', required=True)
@@ -148,14 +196,14 @@ def build_all():
                 if not args.no_upload:
                     upload(client, channel, full_path)
 
-    print('')
     if num == 0:
-        print('Done. Built 0 packages.')
+        logger.info('Done. Built 0 packages.')
     else:
-        print('Done. Built {} packages:'.format(num))
+        logger.info('Done. Built {} packages:'.format(num))
         for pkg in built:
-            print(pkg)
+            logger.info(pkg)
 
 
 if __name__ == '__main__':
+    configure_logger()
     build_all()
