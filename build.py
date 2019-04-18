@@ -126,7 +126,7 @@ def build_all():
     else:
         files = []
 
-    if parser.del_old_builds:
+    if args.del_old_builds:
         try:
             shutil.rmtree(BUILD_DIR)
         except Exception:
