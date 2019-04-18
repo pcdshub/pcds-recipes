@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # Condensed version of nsls-ii's build scripts
 import argparse
+import os
 import shutil
 import subprocess
 import sys
@@ -11,8 +12,9 @@ from socket import gethostname
 
 import binstar_client
 
-PACKAGES = ['epics-base', 'pcaspy', 'pyca', 'pydm', 'pyepics', 'pyqt',
-            'mysqlclient', 'qdarkstyle', 'caproto', 'timechart']
+PACKAGES = [pkg for pkg in os.listdir()
+            if Path(pkg).is_dir() and (Path(pkg) / 'meta.yaml').exists()]
+
 PYTHON = ['3.6', '3.5']
 NUMPY = ['1.14', '1.13', '1.12', '1.11']
 BUILD_DIR = str(Path(__file__).parent / 'conda-bld')
@@ -45,13 +47,14 @@ def check_filename(package, channel, py=None, np=None):
     return output
 
 
-def check_all(files, channel):
+def check_all(files, channel, packages=None):
+    packages = packages or PACKAGES
     to_build = {}
     index = 0
     pool = ThreadPool(processes=cpu_count()-1)
     results = []
 
-    for package in PACKAGES:
+    for package in packages:
         new_package = True
         for py in PYTHON:
             for np in NUMPY:
@@ -97,13 +100,20 @@ def upload(client, channel, filename):
 def build_all():
     print('Running build script')
     parser = argparse.ArgumentParser()
+    parser.add_argument('packages', nargs='*')
     parser.add_argument('--channel', action='store', required=True)
-    parser.add_argument('--token', action='store', required=True)
     parser.add_argument('--no-build', action='store_true', required=False)
+    parser.add_argument('--token', action='store')
     args = parser.parse_args()
 
     channel = args.channel
-    token = args.token
+
+    # Grab token from environment variable if not specified
+    if not args.token:
+        token = os.getenv('ANACONDA_TOKEN')
+        if not token:
+            raise ValueError("Token must be provided using `--token` or in "
+                             "environment variable 'ANACONDA_TOKEN'")
 
     client = binstar_client.Binstar(token=token)
     files = get_uploaded_files(client, channel)
@@ -115,7 +125,7 @@ def build_all():
     build_path = Path(BUILD_DIR)
     build_path.mkdir()
 
-    to_build = check_all(files, channel)
+    to_build = check_all(files, channel, packages=args.packages)
     built = []
 
     num = 0
