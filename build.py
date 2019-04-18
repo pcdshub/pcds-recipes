@@ -15,8 +15,8 @@ import binstar_client
 PACKAGES = [pkg for pkg in os.listdir()
             if Path(pkg).is_dir() and (Path(pkg) / 'meta.yaml').exists()]
 
-PYTHON = ['3.6', '3.5']
-NUMPY = ['1.14', '1.13', '1.12', '1.11']
+PYTHON = ['3.7', '3.6']
+NUMPY = ['1.16', '1.15']
 BUILD_DIR = str(Path(__file__).parent / 'conda-bld')
 
 
