@@ -21,6 +21,7 @@ requirements:
   host:
     - python
     - setuptools
+    - gcc >=4.7
   run:
     - python
 
