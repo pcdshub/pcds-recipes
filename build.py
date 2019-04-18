@@ -124,7 +124,7 @@ def build_all():
         client = binstar_client.Binstar(token=token)
         files = get_uploaded_files(client, channel)
     else:
-        files = []
+        files = set()
 
     if args.del_old_builds:
         try:
