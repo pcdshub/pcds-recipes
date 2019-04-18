@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # Condensed version of nsls-ii's build scripts
 import argparse
+import os
 import shutil
 import subprocess
 import sys
@@ -99,12 +100,18 @@ def build_all():
     print('Running build script')
     parser = argparse.ArgumentParser()
     parser.add_argument('--channel', action='store', required=True)
-    parser.add_argument('--token', action='store', required=True)
     parser.add_argument('--no-build', action='store_true', required=False)
+    parser.add_argument('--token', action='store')
     args = parser.parse_args()
 
     channel = args.channel
-    token = args.token
+
+    # Grab token from environment variable if not specified
+    if not args.token:
+        token = os.getenv('ANACONDA_TOKEN')
+        if not token:
+            raise ValueError("Token must be provided using `--token` or in "
+                             "environment variable 'ANACONDA_TOKEN'")
 
     client = binstar_client.Binstar(token=token)
     files = get_uploaded_files(client, channel)
