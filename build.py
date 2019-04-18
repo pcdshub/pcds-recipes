@@ -104,29 +104,36 @@ def build_all():
     parser.add_argument('--channel', action='store', required=True)
     parser.add_argument('--no-build', action='store_true', required=False)
     parser.add_argument('--no-upload', action='store_true', required=False)
+    parser.add_argument('--del-old-builds', action='store_true', required=False)
     parser.add_argument('--token', action='store')
     args = parser.parse_args()
 
     channel = args.channel
 
     # Grab token from environment variable if not specified
-    if not args.token and not (args.no_build or args.no_upload):
+    if not args.token and not args.no_upload:
         token = os.getenv('ANACONDA_TOKEN')
         if not token:
             raise ValueError("Token must be provided using `--token` or in "
-                             "environment variable 'ANACONDA_TOKEN'")
+                             "environment variable 'ANACONDA_TOKEN', or you "
+                             "can specify --no-upload.")
     else:
         token = args.token
 
-    client = binstar_client.Binstar(token=token)
-    files = get_uploaded_files(client, channel)
+    if token:
+        client = binstar_client.Binstar(token=token)
+        files = get_uploaded_files(client, channel)
+    else:
+        files = []
 
-    try:
-        shutil.rmtree(BUILD_DIR)
-    except Exception:
-        pass
+    if parser.del_old_builds:
+        try:
+            shutil.rmtree(BUILD_DIR)
+        except Exception:
+            pass
     build_path = Path(BUILD_DIR)
-    build_path.mkdir()
+    if not build_path.exists():
+        build_path.mkdir()
 
     to_build = check_all(files, channel, packages=args.packages)
     built = []
