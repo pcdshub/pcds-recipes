@@ -1,0 +1,35 @@
+{% set version = "1.4.0rc1" %}
+package:
+  name: ophyd 
+  version: {{ version }}
+
+source:
+  url: https://github.com/bluesky/ophyd/archive/v{{ version }}.tar.gz
+  fn: pydm-{{ version }}.tar.gz
+
+build:
+  number: 1
+
+requirements:
+  build:
+    - python
+    - setuptools
+
+  run:
+    - python
+    - networkx
+    - numpy
+
+test:
+    imports:
+      - ophyd
+      - ophyd.utils
+      - ophyd.areadetector
+      - ophyd.sim
+
+about:
+  home: https://github.com/bluesky/ophyd
+  license: BSD 3-Clause
+  license_family: BSD
+  license_file: LICENSE
+  summary: 'Ophyd - EPICS Client Abstractions'
