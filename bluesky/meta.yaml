@@ -1,0 +1,45 @@
+{% set version = "1.6.0rc1" %}
+package:
+  name: bluesky 
+  version: {{ version }}
+
+source:
+  url: https://github.com/bluesky/bluesky/archive/v{{ version }}.tar.gz
+  fn: bluesky-{{ version }}.tar.gz
+
+build:
+  number: 1
+
+requirements:
+  build:
+    - python
+    - setuptools
+
+  run:
+    - python
+    - cycler
+    - event-model
+    - historydict
+    - ipython
+    - jsonschema
+    - lmfit
+    - matplotlib
+    - numpy
+    - super_state_machine
+    - toolz
+    - tqdm
+    - pyzmq
+    - doct
+
+test:
+    imports:
+      - bluesky
+      - bluesky.plans
+      - bluesky.callbacks
+
+about:
+  home: https://github.com/bluesky/bluesky
+  license: BSD 3-Clause
+  license_family: BSD
+  license_file: LICENSE
+  summary: 'A Python data collection interface for experimental science'
