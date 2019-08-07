@@ -5,7 +5,7 @@ package:
 
 source:
   url: https://github.com/bluesky/ophyd/archive/v{{ version }}.tar.gz
-  fn: pydm-{{ version }}.tar.gz
+  fn: ophyd-{{ version }}.tar.gz
 
 build:
   number: 1
