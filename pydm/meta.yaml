@@ -1,4 +1,4 @@
-{% set version = "1.7.3" %}
+{% set version = "1.8.0" %}
 package:
   name: pydm 
   version: {{ version }}
