@@ -102,7 +102,6 @@ def run_and_log(args):
     txt = ''
     process = subprocess.Popen(args,
                                stdout=subprocess.PIPE,
-                               stderr=subprocess.STDOUT,
                                universal_newlines=True)
     with process.stdout as pipe:
         for line in iter(pipe.readline, ''):
