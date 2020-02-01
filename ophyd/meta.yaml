@@ -1,4 +1,4 @@
-{% set version = "1.4.0rc1" %}
+{% set version = "1.4.0rc4" %}
 package:
   name: ophyd 
   version: {{ version }}
