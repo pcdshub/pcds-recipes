@@ -23,7 +23,6 @@ requirements:
     - numpy
     - ophyd
     - p4p
-    - pprint
     - psalg
     - psana
     - pyepics
