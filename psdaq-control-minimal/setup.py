@@ -1,7 +1,4 @@
-import os
-from setuptools import setup, find_packages
-
-VERSION = '3.3.14'
+from setuptools import setup
 
 setup(
        name = 'psdaq-control-minimal',

@@ -1,33 +1,17 @@
-From 301c785a6006789aedf84b4cefead82249d0499e Mon Sep 17 00:00:00 2001
-From: Zachary Lentz <zlentz@slac.stanford.edu>
-Date: Mon, 29 Mar 2021 13:53:54 -0700
-Subject: [PATCH] MNT: setup patch for minimal control build
-
----
- psdaq/setup.py | 58 ++++----------------------------------------------
- 1 file changed, 4 insertions(+), 54 deletions(-)
-
 diff --git a/psdaq/setup.py b/psdaq/setup.py
-index 8590945..8a70ac5 100644
+index 28bd16a..d988e3b 100644
 --- a/psdaq/setup.py
 +++ b/psdaq/setup.py
-@@ -1,62 +1,12 @@
- import os
- from setuptools import setup, find_packages
- 
--VERSION = '0.0.0'
--version_env = os.environ.get('VERSION')
--if version_env:
--    VERSION = version_env
-+VERSION = '3.3.14'
+@@ -1,56 +1,9 @@
+-from setuptools import setup, find_packages
++from setuptools import setup
  
  setup(
 -       name = 'psdaq',
 +       name = 'psdaq-control-minimal',
         license = 'LCLS II',
 -       description = 'LCLS II DAQ package',
-+       description = 'LCLS II DAQ control minimal',
-        version = VERSION,
+-
 -       packages = find_packages(),
 -       package_data={'psdaq.control_gui': ['data/icons/*.png','data/icons/*.gif'],},
 -
@@ -76,8 +60,7 @@ index 8590945..8a70ac5 100644
 -                'seqprogram = psdaq.seq.seqprogram:main',
 -              ]
 -       },
++       description = 'LCLS II DAQ control bits needed for hutch python',
++       version = '3.3.14',
 +       packages = 'psdaq.control'
  )
--- 
-2.30.2
-
