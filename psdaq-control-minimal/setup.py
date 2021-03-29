@@ -5,5 +5,5 @@ setup(
        license = 'LCLS II',
        description = 'LCLS II DAQ control bits needed for hutch python',
        version = VERSION,
-       packages = 'psdaq.control'
+       packages = ['psdaq.control']
 )

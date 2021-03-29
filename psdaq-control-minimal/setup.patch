@@ -1,5 +1,5 @@
 diff --git a/psdaq/setup.py b/psdaq/setup.py
-index 28bd16a..d988e3b 100644
+index 28bd16a..bb3a6f6 100644
 --- a/psdaq/setup.py
 +++ b/psdaq/setup.py
 @@ -1,56 +1,9 @@
@@ -62,5 +62,5 @@ index 28bd16a..d988e3b 100644
 -       },
 +       description = 'LCLS II DAQ control bits needed for hutch python',
 +       version = '3.3.14',
-+       packages = 'psdaq.control'
++       packages = ['psdaq.control']
  )
