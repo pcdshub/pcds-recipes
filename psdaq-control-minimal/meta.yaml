@@ -19,7 +19,18 @@ requirements:
     - pip
   run:
     - python
+    - bluesky
+    - numpy
+    - ophyd
     - p4p
+    - pprint
     - psalg
     - psana
+    - pyepics
     - transitions
+    - zeromq
+
+test:
+  imports:
+    - psdaq.control
+    - psdaq.control.bluesky_simple
